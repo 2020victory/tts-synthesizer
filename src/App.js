@@ -5,9 +5,12 @@ import {
   Typography,
   TextField,
   Button,
+  Link,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import GraphicEqIcon from "@material-ui/icons/GraphicEq";
+import { useState } from "react";
+import { fetchAudio } from "./services";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -15,8 +18,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const HOST = "http://127.0.0.1:5000";
+
 function App() {
   const classes = useStyles();
+  const [blob, setBlob] = useState(null);
+  const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const getAudio = () => {
+    fetchAudio(`${HOST}/audio/file/${text}`, (data) => {
+      if (data) {
+        setLoading(false);
+        setBlob(data);
+      } else if (data === undefined) {
+        setLoading(true);
+      } else {
+        console.log("failed");
+        setLoading(false);
+      }
+    });
+  };
 
   return (
     <>
@@ -30,17 +52,18 @@ function App() {
         justify="center"
         alignItems="center"
         direction="column"
-        style={{ minHeight: "70vh" }}
+        style={{ minHeight: "90vh" }}
+        spacing={2}
       >
         <Grid item>
           <TextField
-            id="outlined-multiline-static"
             label="Text Input"
             multiline
             rows={4}
-            defaultValue=""
             variant="outlined"
             color="secondary"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
           />
         </Grid>
         <Grid item>
@@ -49,10 +72,32 @@ function App() {
             color="primary"
             className={classes.button}
             startIcon={<GraphicEqIcon />}
+            onClick={getAudio}
+            disabled={loading}
           >
             Generate Audio
           </Button>
         </Grid>
+        {blob && (
+          <>
+            <Grid item>
+              <audio controls>
+                <source src={blob} type="audio/wav" />
+                Your browser does not support the audio element.
+              </audio>
+            </Grid>
+            <Grid item>
+              <Link
+                color="primary"
+                className={classes.button}
+                href={blob}
+                download={"audio.wav"}
+              >
+                Download
+              </Link>
+            </Grid>
+          </>
+        )}
       </Grid>
     </>
   );
