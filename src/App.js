@@ -47,58 +47,60 @@ function App() {
           <Typography variant="h5">Text To Speech Synthesizer</Typography>
         </Toolbar>
       </AppBar>
-      <Grid
-        container
-        justify="center"
-        alignItems="center"
-        direction="column"
-        style={{ minHeight: "90vh" }}
-        spacing={2}
-      >
-        <Grid item>
-          <TextField
-            label="Text Input"
-            multiline
-            rows={4}
-            variant="outlined"
-            color="secondary"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+      <div style={{ padding: 10 }}>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          direction="column"
+          style={{ minHeight: "90vh" }}
+          spacing={2}
+        >
+          <Grid item>
+            <TextField
+              label="Text Input"
+              multiline
+              rows={4}
+              variant="outlined"
+              color="secondary"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<GraphicEqIcon />}
+              onClick={getAudio}
+              disabled={loading}
+            >
+              Generate Audio
+            </Button>
+          </Grid>
+          {blob && (
+            <>
+              <Grid item>
+                <audio controls>
+                  <source src={blob} type="audio/wav" />
+                  Your browser does not support the audio element.
+                </audio>
+              </Grid>
+              <Grid item>
+                <Link
+                  color="primary"
+                  className={classes.button}
+                  href={blob}
+                  download={"audio.wav"}
+                >
+                  Download
+                </Link>
+              </Grid>
+            </>
+          )}
         </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            startIcon={<GraphicEqIcon />}
-            onClick={getAudio}
-            disabled={loading}
-          >
-            Generate Audio
-          </Button>
-        </Grid>
-        {blob && (
-          <>
-            <Grid item>
-              <audio controls>
-                <source src={blob} type="audio/wav" />
-                Your browser does not support the audio element.
-              </audio>
-            </Grid>
-            <Grid item>
-              <Link
-                color="primary"
-                className={classes.button}
-                href={blob}
-                download={"audio.wav"}
-              >
-                Download
-              </Link>
-            </Grid>
-          </>
-        )}
-      </Grid>
+      </div>
     </>
   );
 }
