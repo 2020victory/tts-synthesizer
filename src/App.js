@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const HOST = "http://121.200.55.178:5000";
+const HOST = "https://c2ba3200f999.ngrok.io";
 
 function App() {
   const classes = useStyles();
