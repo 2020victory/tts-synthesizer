@@ -23,6 +23,7 @@ const HOST = "https://0a20c9a910b1.ngrok.io";
 function App() {
   const classes = useStyles();
   const [blob, setBlob] = useState(null);
+  const [key, setKey] = useState("");
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +32,7 @@ function App() {
       if (data) {
         setLoading(false);
         setBlob(data);
+        setKey(text.replace(" ", "") + Date.now().toString());
       } else if (data === undefined) {
         setLoading(true);
       } else {
@@ -82,7 +84,7 @@ function App() {
           {blob && (
             <>
               <Grid item>
-                <audio controls>
+                <audio key={key} controls>
                   <source src={blob} type="audio/wav" />
                   Your browser does not support the audio element.
                 </audio>
